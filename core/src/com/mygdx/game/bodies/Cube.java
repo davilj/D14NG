@@ -16,19 +16,31 @@ public class Cube extends ControllableGameBody {
         super(world, x, y, catBits, maskBits);
     }
 
+    @Override
+    public String getAtlasFileName() {
+        return "rocketOffpack.atlas";
+    }
+
+    @Override
+    public String getOffAtlasFileName() {
+        return "rocketOffpack.atlas";
+    }
+
+    @Override
+    public String getOnAtlasFileName() {
+        return "rocketpack.atlas";
+    }
+
     public String getDeAccSpriteName() {
         return "cubeDeAct.png";
     }
 
     @Override
-    public void handleColistion(Body a, Body b, Map<String, IGameBody> allBodies, World world) {
+    public void handleCollision(Body a, Body b, Map<String, IGameBody> allBodies, World world) {
 
     }
 
-    @Override
-    public String getAccImageName() {
-        return "cube.png";
-    }
+
 
     @Override
     public float getDensity() {

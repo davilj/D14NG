@@ -1,32 +1,48 @@
 package com.mygdx.game.bodies;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import net.dermetfan.gdx.graphics.g2d.AnimatedSprite;
 
 /**
  * Created by danie on 12/29/2015.
  */
-public abstract class ControllableGameBody extends SimpleGameBody {
+public abstract class ControllableGameBody extends AnimatedGameBody {
     protected Texture actImage;
-    protected Sprite spriteAcc;
+    protected AnimatedSprite offAnimatedSprite;
+    protected TextureAtlas offTextureAtlas;
+    private Animation offAnimation;
+
+    protected AnimatedSprite onAnimatedSprite;
+    protected TextureAtlas onTextureAtlas;
+    private Animation onAnimation;
 
     public ControllableGameBody(World world, int x, int y, short catBits, short maskBits) {
         super(world, x, y, catBits, maskBits);
-        this.actImage = new Texture((getAccImageName()));
-        this.spriteAcc = new Sprite(this.actImage);
+        offTextureAtlas = new TextureAtlas(Gdx.files.internal(getOffAtlasFileName()));
+        offAnimation = new Animation(1/15f, offTextureAtlas.getRegions(), Animation.PlayMode.LOOP);
+        offAnimatedSprite = new AnimatedSprite(offAnimation);
+
+        onTextureAtlas = new TextureAtlas(Gdx.files.internal(getOnAtlasFileName()));
+        onAnimation = new Animation(1/15f, offTextureAtlas.getRegions(), Animation.PlayMode.LOOP);
+        onAnimatedSprite = new AnimatedSprite(offAnimation);
+
     }
 
-    public abstract String getAccImageName();
+    public abstract String getOffAtlasFileName();
+    public abstract String getOnAtlasFileName();
 
     public void changeState() {
         this.activated = !this.activated;
         if (activated) {
-            this.sprite = this.spriteAcc;
+            this.sprite = this.onAnimatedSprite;
         } else {
-            this.sprite = this.spriteDeAcc;
+            this.sprite = this.offAnimatedSprite;
         }
     }
 
@@ -50,6 +66,11 @@ public abstract class ControllableGameBody extends SimpleGameBody {
             System.out.println("force: " + angleVector);
             body.applyForceToCenter(angleVector,true);
         }
+    }
+
+    public void dispose() {
+        super.dispose();
+        offTextureAtlas.dispose();
     }
 
 

@@ -16,16 +16,25 @@ public class Platform extends ControllableGameBody {
     }
 
     @Override
-    public String getAccImageName() {
-        return "platformDeAct.png";
+    public String getAtlasFileName() {
+        return "rocketOffpack.atlas";
     }
 
-    public String getDeAccSpriteName() {
-       return "platform.png";
-   }
+    @Override
+    public String getOffAtlasFileName() {
+        return "rocketOffpack.atlas";
+    }
 
     @Override
-    public void handleColistion(Body a, Body b, Map<String, IGameBody> allBodies, World world) {
+    public String getOnAtlasFileName() {
+        return "rocketOffpack.atlas";
+    }
+
+
+
+
+    @Override
+    public void handleCollision(Body a, Body b, Map<String, IGameBody> allBodies, World world) {
 
     }
 

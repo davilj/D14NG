@@ -11,17 +11,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.mygdx.game.bodies.*;
 import com.mygdx.game.staticbodies.GameEdge;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class MyGdxGame extends ApplicationAdapter implements InputProcessor, ContactListener{
+	static final Random random = new Random();
 	SpriteBatch batch;
 	Sprite sprite,sprite2;
 
@@ -45,21 +42,34 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor, Con
 	final short WORLD_ENTITY = 0x1 << 1; // 0010 or 0x2 in hex
 
 	private synchronized void addLearner(float x, float y) {
-		IGameBody gameBody = BodyFactory.create(Learner.class, world, (int)x,(int)y, PHYSICS_ENTITY, (short) (WORLD_ENTITY|PHYSICS_ENTITY));
+		IGameBody gameBody = new Learner( world, (int)x,(int)y, PHYSICS_ENTITY, (short) (WORLD_ENTITY|PHYSICS_ENTITY));
 		gameBodies.add(gameBody );
 		allBodies.put(gameBody.getId(), gameBody);
+	}
+
+	private synchronized void addSwinger(float x, float y, int numberOfChildren) {
+		IGameBody gameBody = new Swinger(world, (int)x,(int)y, PHYSICS_ENTITY, (short) (WORLD_ENTITY|PHYSICS_ENTITY));
+		gameBodies.add(gameBody );
+		allBodies.put(gameBody.getId(), gameBody);
+
+		for (int n=0; n<numberOfChildren; n++) {
+			int offSet = random.nextInt(50) - random.nextInt(100);
+			IGameBody child = new SwingerChild(world, (int) x + offSet+50, (int) y - offSet-50, PHYSICS_ENTITY, (short) (WORLD_ENTITY | PHYSICS_ENTITY));
+			gameBodies.add(child );
+			allBodies.put(child.getId(), child);
+		}
 	}
 
 	@Override
 	public void create() {
 		batch = new SpriteBatch();
 
-
 		world = new World(new Vector2(0, -0.0f),true);
-		controlableGameBodies.add( BodyFactory.create(Platform.class, world, 10, 10, PHYSICS_ENTITY, (short) (WORLD_ENTITY|PHYSICS_ENTITY)) );
-		controlableGameBodies.add( BodyFactory.create(Cube.class, world, 20,10, PHYSICS_ENTITY, (short) (WORLD_ENTITY|PHYSICS_ENTITY)) );
+		controlableGameBodies.add( new Platform(world, 10, 10, PHYSICS_ENTITY, (short) (WORLD_ENTITY|PHYSICS_ENTITY)) );
+		controlableGameBodies.add( new Cube( world, 20,10, PHYSICS_ENTITY, (short) (WORLD_ENTITY|PHYSICS_ENTITY)) );
 		addLearner(5, 5);
 		addLearner(15, 7);
+		addSwinger(3,3,3);
 
 
 		// Now the physics body of the bottom edge of the screen
@@ -190,7 +200,7 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor, Con
 		final Body b = contact.getFixtureB().getBody();
 		final IGameBody aBody = allBodies.get(a.getUserData());
 		if (aBody==null) return;
-		aBody.handleColistion(a, b, allBodies, world);
+		aBody.handleCollision(a, b, allBodies, world);
 	}
 
 	@Override
@@ -207,9 +217,5 @@ public class MyGdxGame extends ApplicationAdapter implements InputProcessor, Con
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 
 	}
-
-
-
-
 }
 

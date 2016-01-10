@@ -24,5 +24,5 @@ public interface IGameBody {
 
     void dispose();
 
-    void handleColistion(Body a, Body b, Map<String, IGameBody> allBodies, World world);
+    void handleCollision(Body a, Body b, Map<String, IGameBody> allBodies, World world);
 }

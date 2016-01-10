@@ -21,7 +21,7 @@ public abstract class AnimatedGameBody implements IGameBody {
     protected static final float PIXELS_TO_METERS = 100f;
     protected TextureAtlas textureAtlas;
     private Animation animation;
-    private AnimatedSprite sprite;
+    protected AnimatedSprite sprite;
     private float elapsedTime = 0;
     private String id;
 
@@ -71,7 +71,7 @@ public abstract class AnimatedGameBody implements IGameBody {
     public abstract float getDensity();
     public abstract float getRestitution();
     public abstract float getFriction();
-    public abstract void handleColistion(Body a, Body b, Map<String, IGameBody> allBodies, World world);
+    public abstract void handleCollision(Body a, Body b, Map<String, IGameBody> allBodies, World world);
 
     public String getId() {
         return this.id;

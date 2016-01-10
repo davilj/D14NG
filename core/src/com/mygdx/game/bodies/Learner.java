@@ -102,7 +102,7 @@ public class Learner extends AnimatedGameBody {
     }
 
     @Override
-    public void handleColistion(final Body a, final Body b, final Map<String, IGameBody> allBodies, final World world) {
+    public void handleCollision(final Body a, final Body b, final Map<String, IGameBody> allBodies, final World world) {
         final Learner thisBody = this;
         final IGameBody bBody = allBodies.get(b.getUserData());
         if (bBody == null) return;

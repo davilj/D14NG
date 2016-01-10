@@ -63,7 +63,7 @@ public abstract class SimpleGameBody implements IGameBody {
     }
 
     public abstract String getDeAccSpriteName();
-    public abstract void handleColistion(Body a, Body b, Map<String, IGameBody> allBodies, World world);
+    public abstract void handleCollision(Body a, Body b, Map<String, IGameBody> allBodies, World world);
 
     public String getId() {
         return this.id;
